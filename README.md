@@ -1,5 +1,7 @@
 # algorithm_test
+
 Here are all data about the algorithm test to controle de system's angle with the bushless motor.
+More information may be found in may projects report: 
 
 brushless_control:
 This code may be used in order to calibrate the ESC (electronic speed controller) or simply to control a brushless motor. 
