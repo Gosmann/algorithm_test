@@ -1,0 +1,60 @@
+#include <Servo.h>
+
+#define MAX_SIGNAL 2000
+#define MIN_SIGNAL 700
+#define MOTOR_PIN 3
+
+Servo motor;
+
+int analogin = A2; int v0; int vs; int button; float I = 0; float last_vs = 0;
+int speed_b=0; int max_speed = 1255; int min_speed = 1200;
+
+void setup() {
+  pinMode(8, INPUT);
+  Serial.begin(57600);
+  motor.attach(MOTOR_PIN);
+
+  v0 = analogRead(A2) - 20;
+  Serial.println(v0);
+  
+  motor.writeMicroseconds(speed_b);
+  for(int d = 1000; d < (max_speed-50); d++){  vs = analogRead(A2) - v0;
+   Serial.print(d); Serial.print("  "); Serial.println(vs);
+   motor.writeMicroseconds(d); delay(25); 
+   }
+  
+}
+
+void loop() {
+
+    vs = analogRead(A2) - v0;
+    button = digitalRead(8);
+    
+    if (button == HIGH){
+        for(int d = min_speed; d > 1000; d--){
+        motor.writeMicroseconds(d); delay(25); 
+        } while(true){motor.writeMicroseconds(1000);}}
+
+    //CONTROL
+    int sp = 61;
+    float error = sp - vs;
+    float kp = 13;
+    float ki = 25;
+    float kd = 500;
+    
+    int P = kp * error;
+    
+    I += ((error * ki)/40);
+    float D = (((last_vs - vs)*kd)/40);
+    last_vs=vs;
+    
+    int PID = map(P+I+D, 0, 1000, min_speed, max_speed);
+  
+    motor.writeMicroseconds(PID);  
+
+    Serial.print(PID); Serial.print("  "); Serial.print(vs); Serial.print("  "); Serial.print(P);
+    Serial.print("  "); Serial.print(I); Serial.print("  "); Serial.println(D); delay(25);
+
+    
+       
+}
