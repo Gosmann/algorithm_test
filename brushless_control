@@ -1,0 +1,22 @@
+#include <Servo.h>
+
+#define MAX_SIGNAL 2650
+#define MIN_SIGNAL 25
+#define MOTOR_PIN 3
+
+Servo motor;
+
+void setup() {
+  Serial.begin(9600);
+  motor.attach(MOTOR_PIN);
+}
+
+void loop() {  
+
+  int speed_b = analogRead(A0);
+  speed_b = map(speed_b, 0, 1023, 1000, 1500);
+  motor.writeMicroseconds(speed_b);
+  Serial.println(speed_b);
+  delay(15);
+  
+}
