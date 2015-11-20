@@ -1,0 +1,52 @@
+#include <Servo.h>
+
+#define MAX_SIGNAL 2000
+#define MIN_SIGNAL 700
+#define MOTOR_PIN 3
+
+Servo motor;
+
+int analogin = A2; int v0; int vs; 
+
+int speed_b=0; int max_speed = 1250; int min_speed = 1216;
+
+void setup() {
+  pinMode(8, INPUT);
+  Serial.begin(9600);
+  motor.attach(MOTOR_PIN);
+
+  v0 = analogRead(A2) - 10;
+  Serial.println(v0);
+  
+  motor.writeMicroseconds(speed_b);
+  for(int d = 1000; d < max_speed; d++){  vs = analogRead(A2) - v0;
+   Serial.print(vs); Serial.print("  "); Serial.println(d);
+   motor.writeMicroseconds(d); delay(25); 
+   }
+  
+}
+
+void loop() {
+
+    
+    int sp = 55;
+    int button = digitalRead(8);
+    if (button == HIGH){
+        for(int d = max_speed; d > 1000; d--){
+        motor.writeMicroseconds(d); delay(25); 
+        } while(true){motor.writeMicroseconds(1000);}}
+  
+    vs = analogRead(A2) - v0;
+    
+    if(vs > sp){ vs = analogRead(A2) - v0;  
+    while(vs > sp){ vs = analogRead(A2) - v0; motor.writeMicroseconds(min_speed);
+    Serial.print(vs); Serial.print("  "); Serial.println(min_speed); }}
+
+    else {
+     motor.writeMicroseconds(max_speed);  
+     vs = analogRead(A2) - v0;
+    }
+
+    Serial.print(vs); Serial.print("  "); Serial.println(max_speed);
+       
+}
